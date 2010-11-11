@@ -30,7 +30,25 @@ require File.expand_path(File.dirname(__FILE__) + '/edgecase')
 # Your goal is to write the score method.
 
 def score(dice)
-  # You need to write this method
+  h = {}
+  dice.each {|i| h.key?(i) ? h[i] += 1 : h[i] = 1 }
+  score = 0
+  h.keys.each do |key|   
+    if h[key] >= 3
+      key == 1 ? score += 1000 : score += key * 100
+      next if h[key] == 3
+      h[key] -= 3
+    end
+    if key == 1
+      score += h[key] * 100
+      next
+    end
+    if key == 5
+      score += h[key] * 50
+      next
+    end
+  end
+  score
 end
 
 class AboutScoringProject < EdgeCase::Koan
