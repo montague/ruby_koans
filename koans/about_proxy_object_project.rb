@@ -15,26 +15,28 @@ require File.expand_path(File.dirname(__FILE__) + '/edgecase')
 class Proxy
   def initialize(target_object)
     @object = target_object
-    @methods_sent = {}
-    @messages = []
+    @messages_sent = {}
   end
   
   def number_of_times_called(method_name)
-    @methods_sent.key?(method_name) ? @methods_sent[method_name] : 0
+    @messages_sent.key?(method_name) ? @messages_sent[method_name] : 0
   end
   
   def messages
-    @messages
+    @messages_sent.keys
   end
 
   def called?(method_name)
-    @methods_sent.key?(method_name)
+    @messages_sent.key?(method_name)
   end
 
   # WRITE CODE HERE
   def method_missing(method_name, *args, &block)
-    @messages << method_name unless @messages.include?(method_name)
-    @methods_sent.key?(method_name.to_sym) ? @methods_send[method_name.to_sym] += 1 : @methods_sent[method_name.to_sym] = 1
+    if @messages_sent.key?(method_name) 
+      @messages_sent[method_name] += 1 
+    else
+      @messages_sent[method_name] = 1
+    end
     @object.send(method_name, *args, &block)
   end
 end
